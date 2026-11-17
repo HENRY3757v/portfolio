@@ -12,13 +12,13 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #08090B;
+  background-color: #060813;
   color: #F5F5F3;
 }
 
 body {
   font-family: var(--font-inter);
-  background-color: #08090B;
+  background-color: #060813;
   color: #F5F5F3;
   overflow-x: hidden;
   min-height: 100vh;
@@ -29,19 +29,50 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #08090B;
+  background: #060813;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1F2430;
+  background: #1B2133;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #3B82F6;
 }
 
+/* Chromatic Aberration Text Effect */
+.chromatic-logo {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-space-grotesk);
+  font-weight: 800;
+  letter-spacing: 0.35em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.chromatic-logo::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: -2px;
+  color: #ff2a6d;
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.chromatic-logo::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 2px;
+  color: #05d9e8;
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
 /* Glassmorphism & Editorial utilities */
 .glass-panel {
-  background: rgba(17, 19, 24, 0.75);
+  background: rgba(14, 17, 27, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -51,7 +82,7 @@ body {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glass-panel-hover:hover {
-  background: rgba(24, 27, 34, 0.85);
+  background: rgba(22, 27, 42, 0.85);
   border-color: rgba(255, 255, 255, 0.16);
   transform: translateY(-2px);
 }
@@ -70,8 +101,8 @@ body {
 /* Subtle grid overlay */
 .editorial-grid-bg {
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
