@@ -68,10 +68,8 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className="bg-background text-foreground antialiased selection:bg-identity-developer/30 selection:text-white">
         <div className="relative min-h-screen flex flex-col editorial-grid-bg">
-          <Navbar />
           <CommandPalette />
           <main className="flex-1 relative z-10">{children}</main>
-          <Footer />
         </div>
       </body>
     </html>
