@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { profileData } from "@/data/profile";
 import { ArrowLeft, Command, Download, Menu, X, Sparkles } from "lucide-react";
+import { soundFX } from "@/utils/soundEffects";
 
 interface ShowcaseHeaderProps {
   onBackToFront: () => void;
@@ -46,12 +47,20 @@ export default function ShowcaseHeader({ onBackToFront, activeSection = "about" 
       >
         {/* Left: Back to Front Face Toggle Button */}
         <button
-          onClick={onBackToFront}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-[#05d9e8] hover:text-white transition-all group cursor-pointer"
+          onClick={(e) => {
+            soundFX.playSlash();
+            window.dispatchEvent(
+              new CustomEvent("katana-slash", {
+                detail: { x: e.clientX, y: e.clientY },
+              })
+            );
+            onBackToFront();
+          }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-[#ffb7c5] hover:text-white transition-all group cursor-pointer"
           title="Return to Front Face view"
         >
           <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-          <span className="font-semibold tracking-wider">FRONT FACE</span>
+          <span className="font-semibold tracking-wider">← FRONT FACE</span>
         </button>
 
         {/* Center: Desktop Navigation Links */}

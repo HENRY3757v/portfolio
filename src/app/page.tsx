@@ -10,6 +10,7 @@ import ServicesSection from "@/components/services/ServicesSection";
 import JourneyTimeline from "@/components/timeline/JourneyTimeline";
 import ContactSection from "@/components/contact/ContactSection";
 import Footer from "@/components/layout/Footer";
+import SakuraPetalsCanvas from "@/components/sakura/SakuraPetalsCanvas";
 
 export default function Home() {
   const [showcaseOpen, setShowcaseOpen] = useState(false);
@@ -39,11 +40,12 @@ export default function Home() {
         /* Front Face (State 1) - Pure Tony Gines landing screen */
         <SignatureHero onEnterShowcase={handleEnterShowcase} />
       ) : (
-        /* Full Portfolio Showcase (State 2) */
-        <div className="flex flex-col w-full animate-in fade-in duration-500">
+        /* Full Portfolio Showcase (State 2) with Continuous Ambient Sakura */
+        <div className="flex flex-col w-full animate-in fade-in duration-500 relative">
+          <SakuraPetalsCanvas layer="background" petalCount={16} className="fixed inset-0 z-0 opacity-40 pointer-events-none" />
           <ShowcaseHeader onBackToFront={handleBackToFront} activeSection={activeSection} />
           
-          <main className="pt-20 flex flex-col w-full">
+          <main className="pt-20 flex flex-col w-full relative z-10">
             <AboutSection />
             <ExpertiseDashboard />
             <ProjectsShowroom />

@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { profileData } from "@/data/profile";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import CommandPalette from "@/components/ui/CommandPalette";
+import KatanaCursor from "@/components/cursor/KatanaCursor";
+import KatanaSlashOverlay from "@/components/cursor/KatanaSlashOverlay";
+import ZenControls from "@/components/ui/ZenControls";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://github.com/HENRY3757v"),
@@ -68,6 +69,9 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className="bg-background text-foreground antialiased selection:bg-identity-developer/30 selection:text-white">
         <div className="relative min-h-screen flex flex-col editorial-grid-bg">
+          <KatanaCursor />
+          <KatanaSlashOverlay />
+          <ZenControls />
           <CommandPalette />
           <main className="flex-1 relative z-10">{children}</main>
         </div>
