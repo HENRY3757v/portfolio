@@ -20,6 +20,44 @@ export default function Home() {
   const [showcaseOpen, setShowcaseOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("services");
 
+  // Allow natural scroll-down from Hero on mobile and desktop
+  React.useEffect(() => {
+    if (showcaseOpen) return;
+
+    let touchStartY = 0;
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY > 30) {
+        setShowcaseOpen(true);
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches && e.touches[0]) {
+        touchStartY = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches && e.touches[0]) {
+        const delta = touchStartY - e.touches[0].clientY;
+        // User swiped up/scrolled down by more than 45px
+        if (delta > 45) {
+          setShowcaseOpen(true);
+        }
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [showcaseOpen]);
+
   const handleEnterShowcase = (targetSectionId?: string) => {
     setShowcaseOpen(true);
     if (targetSectionId) {

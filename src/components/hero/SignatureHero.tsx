@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import SakuraPetalsCanvas from "@/components/sakura/SakuraPetalsCanvas";
 import SumieBackground from "@/components/sakura/SumieBackground";
+import SamuraiInteractiveStage from "@/components/samurai/SamuraiInteractiveStage";
 import { soundFX } from "@/utils/soundEffects";
 
 interface SignatureHeroProps {
@@ -107,6 +108,7 @@ const QUICK_SERVICES = [
 
 export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
   const [activeIdentityIndex, setActiveIdentityIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<"samurai" | "portrait">("samurai");
   const [revealPercent, setRevealPercent] = useState(65); // 0 = Full B&W, 100 = Full Color
   const [isDragging, setIsDragging] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -161,13 +163,13 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
     <section
       onMouseMove={handleMouseMove}
       onMouseUp={() => setIsDragging(false)}
-      className="relative w-screen min-h-screen lg:h-screen bg-[#070913] text-[#F5F5F3] flex flex-col lg:flex-row items-center justify-between px-6 sm:px-12 lg:px-20 py-12 lg:py-0 overflow-hidden select-none"
+      className="relative w-full min-h-screen bg-[#070913] text-[#F5F5F3] flex flex-col lg:flex-row items-center justify-between px-4 sm:px-8 lg:px-16 py-8 lg:py-0 overflow-x-hidden select-none"
     >
-      {/* 0. TRADITIONAL JAPANESE SUMI-E WEEPING SAKURA BRANCH (User Uploaded Reference Motif) */}
+      {/* 0. TRADITIONAL JAPANESE SUMI-E WEEPING SAKURA BRANCH */}
       <SumieBackground variant="hero" className="absolute inset-0" />
 
-      {/* 1. SAKURA BACKGROUND LAYER (Petals fall BEHIND the portrait and branch) */}
-      <SakuraPetalsCanvas layer="background" petalCount={24} />
+      {/* 1. SAKURA BACKGROUND LAYER (Petals fall behind subject) */}
+      <SakuraPetalsCanvas layer="background" />
 
       {/* Atmospheric Japanese Moonlight Glow Aura */}
       <div
@@ -183,12 +185,12 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
       </div>
 
       {/* LEFT COLUMN: Client-Conversion Headline, Story & Direct Actions */}
-      <div className="relative z-20 flex flex-col justify-between h-full max-h-[640px] py-4 max-w-xl">
+      <div className="relative z-20 flex flex-col justify-between w-full max-w-xl py-4 lg:py-8">
         <div className="flex flex-col">
           {/* Identity Tag & Name Banner */}
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
             <span
-              className="px-2.5 py-0.5 rounded text-[10px] font-mono tracking-widest uppercase transition-colors duration-300"
+              className="px-2.5 py-1 rounded text-[10px] font-mono tracking-widest uppercase transition-colors duration-300"
               style={{
                 backgroundColor: `${currentIdentity.accent}20`,
                 color: currentIdentity.accent,
@@ -197,31 +199,44 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
             >
               {currentIdentity.badge} • {currentIdentity.kanji}
             </span>
-            <span className="text-xs font-mono text-white/50 tracking-wider">
+            <span className="text-[11px] font-mono text-white/50 tracking-wider">
               SUVRADIP DEY • FREELANCE ENGINEER
             </span>
           </div>
 
-          {/* Master Conversion Headline */}
-          <h1 className="font-display font-extrabold text-2xl sm:text-4xl lg:text-[2.6rem] text-white tracking-tight leading-[1.18] mb-4">
+          {/* Master Conversion Headline with CSS clamp() */}
+          <h1
+            className="font-display font-extrabold text-white tracking-tight leading-[1.15] mb-3 sm:mb-4"
+            style={{
+              fontSize: "clamp(1.65rem, 5vw, 2.75rem)",
+            }}
+          >
             I Build Digital Experiences That Work as{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffb7c5] via-[#ff2a6d] to-[#00f0ff]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffd1dc] via-[#ff2a6d] to-[#00f0ff]">
               Beautifully
             </span>{" "}
             as They Look.
           </h1>
 
           {/* Master Supporting Text */}
-          <p className="text-xs sm:text-sm text-foreground-muted leading-relaxed max-w-lg mb-6">
+          <p className="text-xs sm:text-sm text-foreground-muted leading-relaxed max-w-lg mb-4 sm:mb-6">
             I&apos;m Suvradip Dey, a developer building modern websites, Python-powered automation, backend systems, and data-driven solutions. I help individuals, startups, and businesses transform ideas into functional digital products.
           </p>
 
+          {/* MOBILE-ONLY INLINE SAMURAI STAGE (Visible on small & tablet screens between text and CTAs) */}
+          <div className="block lg:hidden my-3 w-full">
+            <SamuraiInteractiveStage
+              activeIdentityColor={currentIdentity.accent}
+              onSlashTriggered={() => soundFX.playSakuraChime()}
+            />
+          </div>
+
           {/* Three High-Conversion Action CTAs */}
-          <div className="flex flex-wrap items-center gap-3 mb-6">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-5 sm:mb-6">
             {/* Primary CTA: Start a Project */}
             <button
               onClick={(e) => handleCtaClick("inquiry", e)}
-              className="px-6 py-3 rounded-full text-xs font-mono font-bold tracking-wider text-black bg-gradient-to-r from-[#ffd1dc] via-[#ffb7c5] to-white hover:from-white hover:to-[#ffd1dc] transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(255,183,197,0.3)] hover:scale-105 active:scale-95 cursor-pointer"
+              className="min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs font-mono font-bold tracking-wider text-black bg-gradient-to-r from-[#ffd1dc] via-[#ffb7c5] to-white hover:from-white hover:to-[#ffd1dc] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,183,197,0.3)] hover:scale-105 active:scale-95 cursor-pointer"
             >
               <Send className="w-3.5 h-3.5 text-[#ff2a6d]" />
               <span>START A PROJECT</span>
@@ -230,7 +245,7 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
             {/* Secondary CTA: Explore My Work */}
             <button
               onClick={(e) => handleCtaClick("projects", e)}
-              className="px-5 py-3 rounded-full text-xs font-mono font-semibold tracking-wider text-white border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 transition-all flex items-center gap-2 cursor-pointer"
+              className="min-h-[44px] px-4 sm:px-5 py-2.5 sm:py-3 rounded-full text-xs font-mono font-semibold tracking-wider text-white border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>EXPLORE MY WORK</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#00f0ff]" />
@@ -239,7 +254,7 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
             {/* Additional CTA: View Services */}
             <button
               onClick={(e) => handleCtaClick("services", e)}
-              className="px-4 py-2 text-xs font-mono text-white/70 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="min-h-[44px] px-3.5 py-2 text-xs font-mono text-white/70 hover:text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <span>VIEW SERVICES</span>
               <ChevronRight className="w-3 h-3 text-[#ffb7c5]" />
@@ -254,7 +269,7 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
                 onClick={(e) => handleCtaClick(s.target, e)}
                 onMouseEnter={() => setHoveredMenuIndex(idx)}
                 onMouseLeave={() => setHoveredMenuIndex(null)}
-                className="p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/5 hover:border-white/15 transition-all flex items-center justify-between text-left group cursor-pointer"
+                className="min-h-[44px] p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/5 hover:border-white/15 transition-all flex items-center justify-between text-left group cursor-pointer"
               >
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#ffb7c5] group-hover:scale-125 transition-transform" />
@@ -272,23 +287,23 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
             href="https://github.com/HENRY3757v"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition-colors"
+            className="p-2 hover:text-white transition-colors"
             title="GitHub Profile"
           >
             <Github className="w-4 h-4" />
           </a>
           <a
-            href="https://linkedin.com/in/suvradipdey"
+            href="https://linkedin.com/in/suvradip-dey-1a659728b"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition-colors"
+            className="p-2 hover:text-white transition-colors"
             title="LinkedIn Profile"
           >
             <Linkedin className="w-4 h-4" />
           </a>
           <a
             href="mailto:leodas8777@gmail.com"
-            className="hover:text-white transition-colors"
+            className="p-2 hover:text-white transition-colors"
             title="Send Email"
           >
             <Mail className="w-4 h-4" />
@@ -296,15 +311,39 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
 
           <div className="ml-auto text-[10px] font-mono text-white/40 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>AVAILABLE FOR CLIENT WORK</span>
+            <span>AVAILABLE FOR WORK</span>
           </div>
         </div>
       </div>
 
-      {/* CENTER / RIGHT COLUMN: CINEMATIC LIVING PORTRAIT & IDENTITY ENGINE */}
-      <div className="relative z-20 flex-1 max-w-xl h-[70vh] lg:h-[86vh] flex flex-col items-center justify-center mt-8 lg:mt-0">
-        {/* Five Identity Selector Pills (Top of portrait) */}
-        <div className="relative z-30 flex items-center justify-center gap-1.5 mb-3 bg-black/50 backdrop-blur-md p-1.5 rounded-full border border-white/10 shadow-xl">
+      {/* DESKTOP-RIGHT COLUMN: DUAL SAMURAI EXPERIENCE & LIVING PORTRAIT ENGINE */}
+      <div className="hidden lg:flex relative z-20 flex-1 max-w-xl flex-col items-center justify-center pl-8">
+        {/* Experience Mode Toggle (Samurai vs Photographic Portrait) */}
+        <div className="relative z-30 flex items-center gap-2 mb-3 bg-black/60 backdrop-blur-md p-1.5 rounded-full border border-white/10 shadow-xl">
+          <button
+            onClick={() => setViewMode("samurai")}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
+              viewMode === "samurai"
+                ? "bg-[#ffb7c5] text-black font-bold shadow-lg shadow-[#ffb7c5]/30"
+                : "text-white/60 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <span>SAMURAI EXPERIENCE ⚔️</span>
+          </button>
+          <button
+            onClick={() => setViewMode("portrait")}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
+              viewMode === "portrait"
+                ? "bg-white/20 text-white font-bold border border-white/20 shadow-lg"
+                : "text-white/60 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <span>LIVING PORTRAIT 📷</span>
+          </button>
+        </div>
+
+        {/* Five Identity Selector Pills */}
+        <div className="relative z-30 flex items-center justify-center gap-1.5 mb-4 bg-black/50 backdrop-blur-md p-1.5 rounded-full border border-white/10 shadow-xl">
           {IDENTITIES.map((identity, idx) => {
             const isActive = activeIdentityIndex === idx;
             return (
@@ -328,109 +367,97 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
           })}
         </div>
 
-        {/* The Living Portrait Frame with Parallax & Breathe */}
-        <div
-          ref={containerRef}
-          onClick={(e) => handleIdentityClick((activeIdentityIndex + 1) % IDENTITIES.length, e)}
-          className="relative w-full max-w-md h-[55vh] lg:h-[68vh] flex items-center justify-center cursor-pointer group"
-          title="Click to slash & switch identity state"
-        >
-          {/* Living Breathing Scale Wrapper */}
+        {/* Main Stage: Samurai Experience OR Photographic Living Portrait */}
+        {viewMode === "samurai" ? (
+          <div className="w-full flex flex-col items-center">
+            <SamuraiInteractiveStage
+              activeIdentityColor={currentIdentity.accent}
+              onSlashTriggered={() => soundFX.playSakuraChime()}
+              className="w-full max-w-[520px]"
+            />
+            <p className="mt-2.5 text-[10px] font-mono text-white/40 tracking-wider">
+              ANTIQUE PARCHMENT • SHINOGI-ZUKURI KATANA • SAKURA WIND PHYSICS
+            </p>
+          </div>
+        ) : (
+          /* The Living Photographic Portrait Frame with Parallax & Breathe */
           <div
-            className="relative w-full h-full animate-living-breathe transition-transform duration-300 ease-out"
-            style={{
-              transform: `translate(${mousePos.x * 0.22}px, ${mousePos.y * 0.22}px) rotateX(${
-                -mousePos.y * 0.3
-              }deg) rotateY(${mousePos.x * 0.3}deg)`,
-              transformStyle: "preserve-3d",
-            }}
+            ref={containerRef}
+            onClick={(e) => handleIdentityClick((activeIdentityIndex + 1) % IDENTITIES.length, e)}
+            className="relative w-full max-w-md h-[55vh] flex items-center justify-center cursor-pointer group"
+            title="Click to slash & switch identity state"
           >
-            {/* LAYER A: Black & White Living Photographic Base */}
             <div
-              className="absolute inset-0 pointer-events-none transition-all duration-500"
+              className="relative w-full h-full animate-living-breathe transition-transform duration-300 ease-out"
               style={{
-                filter: "grayscale(100%) contrast(125%) brightness(92%)",
-                clipPath: `polygon(${revealPercent}% 0, 100% 0, 100% 100%, ${revealPercent}% 100%)`,
-                WebkitMaskImage: "radial-gradient(circle at 50% 48%, black 42%, transparent 74%)",
-                maskImage: "radial-gradient(circle at 50% 48%, black 42%, transparent 74%)",
+                transform: `translate(${mousePos.x * 0.22}px, ${mousePos.y * 0.22}px) rotateX(${
+                  -mousePos.y * 0.3
+                }deg) rotateY(${mousePos.x * 0.3}deg)`,
+                transformStyle: "preserve-3d",
               }}
             >
-              <Image
-                src="/images/suvradip-vignette.jpg?v=5"
-                alt="Suvradip Dey - Living B&W Portrait"
-                fill
-                priority
-                className="object-contain object-center select-none"
-              />
-            </div>
-
-            {/* LAYER B: Dynamic Vibrant Color & Identity Aura */}
-            <div
-              className="absolute inset-0 pointer-events-none transition-all duration-500"
-              style={{
-                filter: currentIdentity.filterStyle,
-                clipPath: `polygon(0 0, ${revealPercent}% 0, ${revealPercent}% 100%, 0 100%)`,
-                WebkitMaskImage: "radial-gradient(circle at 50% 48%, black 42%, transparent 74%)",
-                maskImage: "radial-gradient(circle at 50% 48%, black 42%, transparent 74%)",
-              }}
-            >
-              <Image
-                src="/images/suvradip-vignette.jpg?v=5"
-                alt="Suvradip Dey - Identity Color Portrait"
-                fill
-                priority
-                className="object-contain object-center select-none"
-              />
-            </div>
-
-            {/* LAYER C: Sharp Forefront Face & Lighting Flare */}
-            <div
-              className="absolute inset-0 pointer-events-none opacity-45 mix-blend-overlay transition-transform duration-300"
-              style={{
-                transform: `translate(${mousePos.x * 0.1}px, ${mousePos.y * 0.1}px)`,
-                WebkitMaskImage: "radial-gradient(circle at 50% 45%, black 35%, transparent 65%)",
-                maskImage: "radial-gradient(circle at 50% 45%, black 35%, transparent 65%)",
-              }}
-            >
-              <Image
-                src="/images/suvradip-vignette.jpg?v=5"
-                alt="Suvradip Dey - Lighting Highlight"
-                fill
-                priority
-                className="object-contain object-center select-none"
-              />
-            </div>
-
-            {/* Katana Slash Light Dividing Cut Line at revealPercent */}
-            <div
-              className="absolute top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#ffb7c5] to-transparent shadow-[0_0_15px_#ff2a6d] pointer-events-none transition-all duration-75"
-              style={{
-                left: `${revealPercent}%`,
-              }}
-            >
-              {/* Draggable Samurai Crest Handle */}
+              {/* LAYER A: Black & White Base */}
               <div
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                  setIsDragging(true);
+                className="absolute inset-0 pointer-events-none transition-all duration-500"
+                style={{
+                  filter: "grayscale(100%) contrast(125%) brightness(92%)",
+                  clipPath: `polygon(${revealPercent}% 0, 100% 0, 100% 100%, ${revealPercent}% 100%)`,
+                  WebkitMaskImage: "radial-gradient(circle at 50% 48%, black 42%, transparent 74%)",
+                  maskImage: "radial-gradient(circle at 50% 48%, black 42%, transparent 74%)",
                 }}
-                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-black/80 border border-[#ffb7c5] shadow-[0_0_12px_#ff2a6d] flex items-center justify-center cursor-ew-resize pointer-events-auto hover:scale-110 transition-transform"
-                title="Drag to reveal color dimension"
               >
-                <Sliders className="w-3.5 h-3.5 text-[#ffb7c5]" />
+                <Image
+                  src="/images/suvradip-vignette.jpg?v=5"
+                  alt="Suvradip Dey - Living B&W Portrait"
+                  fill
+                  priority
+                  className="object-contain object-center select-none"
+                />
+              </div>
+
+              {/* LAYER B: Dynamic Color */}
+              <div
+                className="absolute inset-0 pointer-events-none transition-all duration-500"
+                style={{
+                  filter: currentIdentity.filterStyle,
+                  clipPath: `polygon(0 0, ${revealPercent}% 0, ${revealPercent}% 100%, 0 100%)`,
+                  WebkitMaskImage: "radial-gradient(circle at 50% 48%, black 42%, transparent 74%)",
+                  maskImage: "radial-gradient(circle at 50% 48%, black 42%, transparent 74%)",
+                }}
+              >
+                <Image
+                  src="/images/suvradip-vignette.jpg?v=5"
+                  alt="Suvradip Dey - Identity Color Portrait"
+                  fill
+                  priority
+                  className="object-contain object-center select-none"
+                />
+              </div>
+
+              {/* Katana Slash Light Dividing Cut Line */}
+              <div
+                className="absolute top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#ffb7c5] to-transparent shadow-[0_0_15px_#ff2a6d] pointer-events-none transition-all duration-75"
+                style={{
+                  left: `${revealPercent}%`,
+                }}
+              >
+                <div
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                    setIsDragging(true);
+                  }}
+                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-black/80 border border-[#ffb7c5] shadow-[0_0_12px_#ff2a6d] flex items-center justify-center cursor-ew-resize pointer-events-auto hover:scale-110 transition-transform"
+                  title="Drag to reveal color dimension"
+                >
+                  <Sliders className="w-3.5 h-3.5 text-[#ffb7c5]" />
+                </div>
               </div>
             </div>
-
-            {/* Interactive Japanese Katana Slash Hint Badge */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full bg-black/70 border border-white/10 text-[10px] font-mono text-white/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 pointer-events-none shadow-2xl backdrop-blur-md">
-              <Sparkles className="w-3 h-3 text-[#ffb7c5] animate-spin" />
-              <span>CLICK TO SLASH &amp; TRANSFORM IDENTITY</span>
-            </div>
           </div>
-        </div>
+        )}
 
         {/* Identity Tags Footer Bar */}
-        <div className="relative z-30 flex items-center gap-2 mt-2">
+        <div className="relative z-30 flex items-center gap-2 mt-3">
           {currentIdentity.tags.map((tag) => (
             <span
               key={tag}
@@ -442,8 +469,8 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
         </div>
       </div>
 
-      {/* 2. SAKURA FOREGROUND LAYER (Petals drift IN FRONT of Suvradip's face) */}
-      <SakuraPetalsCanvas layer="foreground" petalCount={14} />
+      {/* 2. SAKURA FOREGROUND LAYER */}
+      <SakuraPetalsCanvas layer="foreground" />
     </section>
   );
 }

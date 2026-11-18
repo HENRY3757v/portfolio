@@ -7,6 +7,7 @@ interface SakuraCanvasProps {
   petalCount?: number;
   className?: string;
   enableWindRepulsion?: boolean;
+  tier?: "high" | "mid" | "low";
 }
 
 interface Petal {
@@ -39,6 +40,7 @@ export default function SakuraPetalsCanvas({
   petalCount,
   className = "",
   enableWindRepulsion = true,
+  tier = "high",
 }: SakuraCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mouseRef = useRef({ x: -1000, y: -1000, prevX: -1000, prevY: -1000, speed: 0 });
@@ -56,11 +58,22 @@ export default function SakuraPetalsCanvas({
     // Reduced motion check
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Density calculation based on layer and device width
-    const isMobile = width < 768;
+    // Adaptive density based on layer, screen width, and performance tier
+    const isMobile = width < 640;
+    const isTablet = width >= 640 && width < 1024;
+
+    let baseCount = 30;
+    if (tier === "low") {
+      baseCount = isMobile ? 8 : 14;
+    } else if (tier === "mid") {
+      baseCount = isMobile ? 12 : 20;
+    } else {
+      baseCount = isMobile ? 14 : (isTablet ? 22 : 32);
+    }
+
     const defaultCount = layer === "foreground" 
-      ? (isMobile ? 10 : 20) 
-      : (isMobile ? 18 : 36);
+      ? Math.max(4, Math.floor(baseCount * 0.45))
+      : baseCount;
     const count = petalCount ?? defaultCount;
 
     const petals: Petal[] = [];
@@ -112,7 +125,32 @@ export default function SakuraPetalsCanvas({
       mouseRef.current.y = e.clientY;
     };
 
+    // Sword Draw / Slash Wind Impulse Listener
+    const handleGust = (e: Event) => {
+      const customEvent = e as CustomEvent<{ x?: number; y?: number; force?: number }>;
+      const originX = customEvent.detail?.x ?? width * 0.7;
+      const originY = customEvent.detail?.y ?? height * 0.5;
+      const forceMultiplier = customEvent.detail?.force ?? 1.8;
+
+      for (const p of petals) {
+        const dx = p.x - originX;
+        const dy = p.y - originY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const maxRadius = Math.max(width, height) * 0.7;
+
+        if (dist < maxRadius) {
+          const impulse = (1 - dist / maxRadius) * 12 * forceMultiplier * p.z;
+          const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.5;
+          p.vx += Math.cos(angle) * impulse;
+          p.vy += Math.sin(angle) * impulse - 2; // Upward-outward lift
+          p.rotationSpeed += (Math.random() - 0.5) * 0.2;
+        }
+      }
+    };
+
     window.addEventListener("resize", handleResize);
+    window.addEventListener("sakura-gust", handleGust);
+    window.addEventListener("katana-slash", handleGust);
     if (enableWindRepulsion) {
       window.addEventListener("mousemove", handleMouseMove, { passive: true });
     }
@@ -215,12 +253,14 @@ export default function SakuraPetalsCanvas({
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("sakura-gust", handleGust);
+      window.removeEventListener("katana-slash", handleGust);
       if (enableWindRepulsion) {
         window.removeEventListener("mousemove", handleMouseMove);
       }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [layer, petalCount, enableWindRepulsion]);
+  }, [layer, petalCount, enableWindRepulsion, tier]);
 
   return (
     <canvas

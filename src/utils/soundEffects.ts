@@ -172,6 +172,108 @@ class SoundController {
       // Audio context failure gracefully ignored
     }
   }
+
+  // Authentic Japanese Katana Sword Draw (Iaijutsu: saya friction + metallic sheen)
+  public playSwordDraw() {
+    if (!this.isEnabled) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+
+      const now = this.ctx.currentTime;
+
+      // 1. Wood/lacquer Saya slide friction
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.35);
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.sin((i / bufferSize) * Math.PI);
+      }
+
+      const friction = this.ctx.createBufferSource();
+      friction.buffer = buffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(1200, now);
+      filter.frequency.exponentialRampToValueAtTime(2400, now + 0.3);
+      filter.Q.setValueAtTime(3.5, now);
+
+      const frictionGain = this.ctx.createGain();
+      frictionGain.gain.setValueAtTime(0.02, now);
+      frictionGain.gain.linearRampToValueAtTime(0.18, now + 0.15);
+      frictionGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+      friction.connect(filter);
+      filter.connect(frictionGain);
+      frictionGain.connect(this.ctx.destination);
+
+      friction.start(now);
+      friction.stop(now + 0.35);
+
+      // 2. High steel shimmer / draw tone
+      const steelOsc = this.ctx.createOscillator();
+      steelOsc.type = "sine";
+      steelOsc.frequency.setValueAtTime(1400, now + 0.08);
+      steelOsc.frequency.exponentialRampToValueAtTime(2800, now + 0.32);
+
+      const steelGain = this.ctx.createGain();
+      steelGain.gain.setValueAtTime(0.0001, now);
+      steelGain.gain.linearRampToValueAtTime(0.09, now + 0.15);
+      steelGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+
+      steelOsc.connect(steelGain);
+      steelGain.connect(this.ctx.destination);
+
+      steelOsc.start(now + 0.08);
+      steelOsc.stop(now + 0.45);
+    } catch {
+      // Audio context failure gracefully ignored
+    }
+  }
+
+  // Katana Resheath Lock / Clack (Tsuba meeting Habaki)
+  public playSheathe() {
+    if (!this.isEnabled) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+
+      const now = this.ctx.currentTime;
+
+      // Click / Habaki lock transient
+      const clickOsc = this.ctx.createOscillator();
+      clickOsc.type = "triangle";
+      clickOsc.frequency.setValueAtTime(800, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(180, now + 0.06);
+
+      const clickGain = this.ctx.createGain();
+      clickGain.gain.setValueAtTime(0.25, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+
+      clickOsc.connect(clickGain);
+      clickGain.connect(this.ctx.destination);
+      clickOsc.start(now);
+      clickOsc.stop(now + 0.07);
+
+      // Metallic ring after lock
+      const ringOsc = this.ctx.createOscillator();
+      ringOsc.type = "sine";
+      ringOsc.frequency.setValueAtTime(2200, now + 0.02);
+      ringOsc.frequency.exponentialRampToValueAtTime(2100, now + 0.35);
+
+      const ringGain = this.ctx.createGain();
+      ringGain.gain.setValueAtTime(0.07, now + 0.02);
+      ringGain.gain.exponentialRampToValueAtTime(0.0005, now + 0.35);
+
+      ringOsc.connect(ringGain);
+      ringGain.connect(this.ctx.destination);
+      ringOsc.start(now + 0.02);
+      ringOsc.stop(now + 0.35);
+    } catch {
+      // Audio context failure gracefully ignored
+    }
+  }
 }
 
 export const soundFX = new SoundController();
