@@ -10,8 +10,12 @@ import {
   Sparkles,
   ChevronRight,
   Sliders,
+  Send,
+  Layers,
+  Code2,
 } from "lucide-react";
 import SakuraPetalsCanvas from "@/components/sakura/SakuraPetalsCanvas";
+import SumieBackground from "@/components/sakura/SumieBackground";
 import { soundFX } from "@/utils/soundEffects";
 
 interface SignatureHeroProps {
@@ -94,13 +98,11 @@ const IDENTITIES: IdentityState[] = [
   },
 ];
 
-const MENU_ITEMS = [
-  { label: "User Interface", target: "projects", kanji: "界面" },
+const QUICK_SERVICES = [
+  { label: "Website Development", target: "services", kanji: "ウェブ" },
+  { label: "Python Automation", target: "services", kanji: "自動化" },
+  { label: "Backend Systems", target: "services", kanji: "基盤" },
   { label: "ShopEase Flagship", target: "projects", kanji: "旗艦" },
-  { label: "Full-Stack Systems", target: "projects", kanji: "全層" },
-  { label: "Python & Automation", target: "expertise", kanji: "自動" },
-  { label: "AI & Data Science", target: "about", kanji: "知能" },
-  { label: "Creative Technology", target: "services", kanji: "創造" },
 ];
 
 export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
@@ -117,8 +119,8 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
   const handleMouseMove = (e: React.MouseEvent) => {
     const { clientX, clientY, currentTarget } = e;
     const rect = currentTarget.getBoundingClientRect();
-    const x = ((clientX - rect.left) / rect.width - 0.5) * 28;
-    const y = ((clientY - rect.top) / rect.height - 0.5) * 28;
+    const x = ((clientX - rect.left) / rect.width - 0.5) * 26;
+    const y = ((clientY - rect.top) / rect.height - 0.5) * 26;
     setMousePos({ x, y });
 
     // Handle Dragging Slider
@@ -143,7 +145,7 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
     );
   };
 
-  const handleMenuClick = (target: string, e: React.MouseEvent) => {
+  const handleCtaClick = (target: string, e: React.MouseEvent) => {
     soundFX.playSlash();
     window.dispatchEvent(
       new CustomEvent("katana-slash", {
@@ -152,17 +154,20 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
     );
     setTimeout(() => {
       onEnterShowcase(target);
-    }, 200);
+    }, 180);
   };
 
   return (
     <section
       onMouseMove={handleMouseMove}
       onMouseUp={() => setIsDragging(false)}
-      className="relative w-screen h-screen min-h-[700px] bg-[#070913] text-[#F5F5F3] flex items-center justify-between px-6 sm:px-12 lg:px-20 overflow-hidden select-none"
+      className="relative w-screen min-h-screen lg:h-screen bg-[#070913] text-[#F5F5F3] flex flex-col lg:flex-row items-center justify-between px-6 sm:px-12 lg:px-20 py-12 lg:py-0 overflow-hidden select-none"
     >
-      {/* 1. SAKURA BACKGROUND LAYER (Petals fall BEHIND the portrait) */}
-      <SakuraPetalsCanvas layer="background" petalCount={28} />
+      {/* 0. TRADITIONAL JAPANESE SUMI-E WEEPING SAKURA BRANCH (User Uploaded Reference Motif) */}
+      <SumieBackground variant="hero" className="absolute inset-0" />
+
+      {/* 1. SAKURA BACKGROUND LAYER (Petals fall BEHIND the portrait and branch) */}
+      <SakuraPetalsCanvas layer="background" petalCount={24} />
 
       {/* Atmospheric Japanese Moonlight Glow Aura */}
       <div
@@ -177,13 +182,13 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
         桜侍
       </div>
 
-      {/* LEFT COLUMN: Tony Gines Japanese Editorial Typography & Menu */}
-      <div className="relative z-20 flex flex-col justify-between h-full max-h-[620px] py-8 max-w-md">
-        {/* Brand Typographic Title */}
+      {/* LEFT COLUMN: Client-Conversion Headline, Story & Direct Actions */}
+      <div className="relative z-20 flex flex-col justify-between h-full max-h-[640px] py-4 max-w-xl">
         <div className="flex flex-col">
-          <div className="flex items-center gap-3 mb-2">
+          {/* Identity Tag & Name Banner */}
+          <div className="flex items-center gap-3 mb-3">
             <span
-              className="px-2 py-0.5 rounded text-[10px] font-mono tracking-widest uppercase transition-colors duration-300"
+              className="px-2.5 py-0.5 rounded text-[10px] font-mono tracking-widest uppercase transition-colors duration-300"
               style={{
                 backgroundColor: `${currentIdentity.accent}20`,
                 color: currentIdentity.accent,
@@ -192,78 +197,77 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
             >
               {currentIdentity.badge} • {currentIdentity.kanji}
             </span>
-            <span className="text-xs font-mono text-white/40 tracking-wider">
-              SUVRADIP DEY
+            <span className="text-xs font-mono text-white/50 tracking-wider">
+              SUVRADIP DEY • FREELANCE ENGINEER
             </span>
           </div>
 
-          <div className="font-display font-extrabold text-3xl sm:text-4xl tracking-[0.25em] text-[#ff2a6d] drop-shadow-[0_0_20px_rgba(255,42,109,0.4)] leading-tight">
-            <span>SUVRADIP</span>
-            <br />
-            <span
-              className="transition-colors duration-500"
-              style={{
-                color: currentIdentity.accent,
-                textShadow: `0 0 20px ${currentIdentity.accentGlow}`,
-              }}
+          {/* Master Conversion Headline */}
+          <h1 className="font-display font-extrabold text-2xl sm:text-4xl lg:text-[2.6rem] text-white tracking-tight leading-[1.18] mb-4">
+            I Build Digital Experiences That Work as{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffb7c5] via-[#ff2a6d] to-[#00f0ff]">
+              Beautifully
+            </span>{" "}
+            as They Look.
+          </h1>
+
+          {/* Master Supporting Text */}
+          <p className="text-xs sm:text-sm text-foreground-muted leading-relaxed max-w-lg mb-6">
+            I&apos;m Suvradip Dey, a developer building modern websites, Python-powered automation, backend systems, and data-driven solutions. I help individuals, startups, and businesses transform ideas into functional digital products.
+          </p>
+
+          {/* Three High-Conversion Action CTAs */}
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            {/* Primary CTA: Start a Project */}
+            <button
+              onClick={(e) => handleCtaClick("inquiry", e)}
+              className="px-6 py-3 rounded-full text-xs font-mono font-bold tracking-wider text-black bg-gradient-to-r from-[#ffd1dc] via-[#ffb7c5] to-white hover:from-white hover:to-[#ffd1dc] transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(255,183,197,0.3)] hover:scale-105 active:scale-95 cursor-pointer"
             >
-              DEY
-            </span>
+              <Send className="w-3.5 h-3.5 text-[#ff2a6d]" />
+              <span>START A PROJECT</span>
+            </button>
+
+            {/* Secondary CTA: Explore My Work */}
+            <button
+              onClick={(e) => handleCtaClick("projects", e)}
+              className="px-5 py-3 rounded-full text-xs font-mono font-semibold tracking-wider text-white border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <span>EXPLORE MY WORK</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#00f0ff]" />
+            </button>
+
+            {/* Additional CTA: View Services */}
+            <button
+              onClick={(e) => handleCtaClick("services", e)}
+              className="px-4 py-2 text-xs font-mono text-white/70 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>VIEW SERVICES</span>
+              <ChevronRight className="w-3 h-3 text-[#ffb7c5]" />
+            </button>
           </div>
 
-          {/* Thin Samurai Blade Divider */}
-          <div className="w-12 h-[1.5px] bg-gradient-to-r from-white/40 via-[#ffb7c5] to-transparent mt-5 mb-4" />
-
-          {/* Active Identity Sub-Headline */}
-          <div className="text-xs sm:text-sm font-mono tracking-wider text-[#9aa0ad] max-w-xs transition-all duration-300">
-            <p className="font-semibold text-white/90">{currentIdentity.headline}</p>
-            <p className="text-[11px] text-white/50 mt-1 line-clamp-2">{currentIdentity.subline}</p>
+          {/* Quick Service Highlights */}
+          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/5">
+            {QUICK_SERVICES.map((s, idx) => (
+              <button
+                key={s.label}
+                onClick={(e) => handleCtaClick(s.target, e)}
+                onMouseEnter={() => setHoveredMenuIndex(idx)}
+                onMouseLeave={() => setHoveredMenuIndex(null)}
+                className="p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/5 hover:border-white/15 transition-all flex items-center justify-between text-left group cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#ffb7c5] group-hover:scale-125 transition-transform" />
+                  <span className="text-[11px] font-mono text-white/80 group-hover:text-white">{s.label}</span>
+                </div>
+                <span className="text-[9px] font-serif text-white/30 group-hover:text-[#ffb7c5]">{s.kanji}</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Minimalist Vertical Navigation Menu */}
-        <nav className="flex flex-col gap-3 py-4">
-          {MENU_ITEMS.map((item, index) => {
-            const isHovered = hoveredMenuIndex === index;
-            return (
-              <button
-                key={item.label}
-                onClick={(e) => handleMenuClick(item.target, e)}
-                onMouseEnter={() => setHoveredMenuIndex(index)}
-                onMouseLeave={() => setHoveredMenuIndex(null)}
-                className={`text-left transition-all duration-300 flex items-center justify-between group cursor-pointer py-0.5 ${
-                  isHovered
-                    ? "translate-x-2 text-white font-medium"
-                    : "text-[#8E929E] hover:text-white"
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                      isHovered
-                        ? "bg-[#ffb7c5] shadow-[0_0_8px_#ff2a6d] scale-125"
-                        : "bg-white/20"
-                    }`}
-                  />
-                  <span className="text-sm tracking-wide">{item.label}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-serif text-white/30 group-hover:text-[#ffb7c5] transition-colors">
-                    {item.kanji}
-                  </span>
-                  <ChevronRight
-                    className={`w-3 h-3 text-[#00f0ff] transition-opacity duration-300 ${
-                      isHovered ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                </div>
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Bottom Social Icons & Katana Enter Button */}
-        <div className="flex items-center gap-4 text-[#626674] pt-4 border-t border-white/5">
+        {/* Bottom Social Icons Row */}
+        <div className="flex items-center gap-4 text-[#626674] pt-4 border-t border-white/5 mt-4">
           <a
             href="https://github.com/HENRY3757v"
             target="_blank"
@@ -290,20 +294,17 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
             <Mail className="w-4 h-4" />
           </a>
 
-          <button
-            onClick={(e) => handleMenuClick("about", e)}
-            className="text-[11px] font-mono tracking-wider text-[#ffb7c5] hover:text-white flex items-center gap-1.5 transition-colors ml-auto group cursor-pointer"
-          >
-            <span>ENTER SHOWCASE</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-          </button>
+          <div className="ml-auto text-[10px] font-mono text-white/40 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>AVAILABLE FOR CLIENT WORK</span>
+          </div>
         </div>
       </div>
 
       {/* CENTER / RIGHT COLUMN: CINEMATIC LIVING PORTRAIT & IDENTITY ENGINE */}
-      <div className="relative z-20 flex-1 max-w-2xl h-[88vh] flex flex-col items-center justify-center">
+      <div className="relative z-20 flex-1 max-w-xl h-[70vh] lg:h-[86vh] flex flex-col items-center justify-center mt-8 lg:mt-0">
         {/* Five Identity Selector Pills (Top of portrait) */}
-        <div className="relative z-30 flex items-center justify-center gap-1.5 mb-3 bg-black/40 backdrop-blur-md p-1.5 rounded-full border border-white/10 shadow-xl">
+        <div className="relative z-30 flex items-center justify-center gap-1.5 mb-3 bg-black/50 backdrop-blur-md p-1.5 rounded-full border border-white/10 shadow-xl">
           {IDENTITIES.map((identity, idx) => {
             const isActive = activeIdentityIndex === idx;
             return (
@@ -331,20 +332,20 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
         <div
           ref={containerRef}
           onClick={(e) => handleIdentityClick((activeIdentityIndex + 1) % IDENTITIES.length, e)}
-          className="relative w-full max-w-lg h-[72vh] flex items-center justify-center cursor-pointer group"
+          className="relative w-full max-w-md h-[55vh] lg:h-[68vh] flex items-center justify-center cursor-pointer group"
           title="Click to slash & switch identity state"
         >
-          {/* Subtle Living Breathing Scale Wrapper */}
+          {/* Living Breathing Scale Wrapper */}
           <div
             className="relative w-full h-full animate-living-breathe transition-transform duration-300 ease-out"
             style={{
-              transform: `translate(${mousePos.x * 0.25}px, ${mousePos.y * 0.25}px) rotateX(${
-                -mousePos.y * 0.35
-              }deg) rotateY(${mousePos.x * 0.35}deg)`,
+              transform: `translate(${mousePos.x * 0.22}px, ${mousePos.y * 0.22}px) rotateX(${
+                -mousePos.y * 0.3
+              }deg) rotateY(${mousePos.x * 0.3}deg)`,
               transformStyle: "preserve-3d",
             }}
           >
-            {/* LAYER A: Black & White Living Photographic Base (Visible on Right of Slider) */}
+            {/* LAYER A: Black & White Living Photographic Base */}
             <div
               className="absolute inset-0 pointer-events-none transition-all duration-500"
               style={{
@@ -356,14 +357,14 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
             >
               <Image
                 src="/images/suvradip-vignette.jpg?v=5"
-                alt="Suvradip Dey - Black & White Living Portrait"
+                alt="Suvradip Dey - Living B&W Portrait"
                 fill
                 priority
                 className="object-contain object-center select-none"
               />
             </div>
 
-            {/* LAYER B: Dynamic Vibrant Color & Identity Aura (Visible on Left of Slider) */}
+            {/* LAYER B: Dynamic Vibrant Color & Identity Aura */}
             <div
               className="absolute inset-0 pointer-events-none transition-all duration-500"
               style={{
@@ -393,7 +394,7 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
             >
               <Image
                 src="/images/suvradip-vignette.jpg?v=5"
-                alt="Suvradip Dey - Highlight"
+                alt="Suvradip Dey - Lighting Highlight"
                 fill
                 priority
                 className="object-contain object-center select-none"
@@ -442,7 +443,7 @@ export default function SignatureHero({ onEnterShowcase }: SignatureHeroProps) {
       </div>
 
       {/* 2. SAKURA FOREGROUND LAYER (Petals drift IN FRONT of Suvradip's face) */}
-      <SakuraPetalsCanvas layer="foreground" petalCount={16} />
+      <SakuraPetalsCanvas layer="foreground" petalCount={14} />
     </section>
   );
 }

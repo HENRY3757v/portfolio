@@ -12,12 +12,12 @@ interface ShowcaseHeaderProps {
 }
 
 const NAV_ITEMS = [
-  { label: "ABOUT", href: "#about" },
-  { label: "EXPERTISE", href: "#expertise" },
-  { label: "PROJECTS", href: "#projects" },
   { label: "SERVICES", href: "#services" },
-  { label: "JOURNEY", href: "#journey" },
-  { label: "CONTACT", href: "#contact" },
+  { label: "WORK", href: "#projects" },
+  { label: "EXPERTISE", href: "#expertise" },
+  { label: "WHY ME", href: "#why-me" },
+  { label: "FAQ", href: "#faq" },
+  { label: "INQUIRY", href: "#inquiry" },
 ];
 
 export default function ShowcaseHeader({ onBackToFront, activeSection = "about" }: ShowcaseHeaderProps) {
@@ -95,10 +95,10 @@ export default function ShowcaseHeader({ onBackToFront, activeSection = "about" 
 
           {/* Quick Contact CTA */}
           <a
-            href="#contact"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold text-black bg-[#05d9e8] hover:bg-[#05d9e8]/90 transition-all shadow-md shadow-[#05d9e8]/20"
+            href="#inquiry"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold text-black bg-[#ffb7c5] hover:bg-white transition-all shadow-md shadow-[#ffb7c5]/20"
           >
-            <span>LET&apos;S TALK</span>
+            <span>START A PROJECT</span>
           </a>
 
           {/* Mobile Menu Toggle */}
